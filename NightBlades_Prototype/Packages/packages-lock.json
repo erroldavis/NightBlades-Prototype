@@ -1,9 +1,9 @@
 {
   "dependencies": {
     "com.kylewbanks.scenerefattribute": {
-      "version": "file:F:/Unity/NightBlades-Prototype/NightBlades_Prototype/Packages/scene-ref-attribute-main",
+      "version": "file:scene-ref-attribute-main",
       "depth": 0,
-      "source": "local",
+      "source": "embedded",
       "dependencies": {}
     },
     "com.unity.burst": {
