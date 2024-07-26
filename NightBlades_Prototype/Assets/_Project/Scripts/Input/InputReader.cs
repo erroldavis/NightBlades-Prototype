@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -15,6 +16,7 @@ namespace NBProtoype
         public event UnityAction EnableMouseControlCamera = delegate { };
         public event UnityAction DisableMouseControlCamera = delegate { };
         public event UnityAction<bool> Jump = delegate { };
+        public event UnityAction<bool> Switch = delegate { };
         public event UnityAction<bool> Dash = delegate { };
         public event UnityAction Attack = delegate { };
 
@@ -90,5 +92,17 @@ namespace NBProtoype
             }
         }
 
+        void IPlayerActions.OnSwitch(InputAction.CallbackContext context)
+        {
+            switch (context.phase)
+            {
+                case InputActionPhase.Started:
+                    Switch.Invoke(true);
+                    break;
+                case InputActionPhase.Canceled:
+                    Switch.Invoke(false);
+                    break;
+            }
+        }
     }
 }
