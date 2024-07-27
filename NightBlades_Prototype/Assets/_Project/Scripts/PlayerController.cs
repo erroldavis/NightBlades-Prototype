@@ -28,11 +28,9 @@ namespace NBProtoype
         [SerializeField] float jumpCooldown = 0f;
         [SerializeField] float gravityMultiplier = 3f;
 
-        [Header("Personality Switch Settings")]
-        public GameObject[] personality;
-        private int currentPersonalityIndex = 0;
-        [SerializeField] float switchDuration = 0.5f;
-        [SerializeField] float switchCooldown = 0f;
+        //[Header("Personality Switch Settings")]
+        //[SerializeField] float switchDuration = 0.5f;
+        //[SerializeField] float switchCooldown = 0f;
 
         const float ZeroF = 0f;
 
@@ -48,8 +46,8 @@ namespace NBProtoype
         CountdownTimer jumpTimer;
         CountdownTimer jumpCooldownTimer;
 
-        CountdownTimer switchTimer;
-        CountdownTimer switchCooldownTimer;
+        //CountdownTimer switchTimer;
+        //CountdownTimer switchCooldownTimer;
 
 
         // Animator parameters
@@ -78,7 +76,8 @@ namespace NBProtoype
             jumpTimer.OnTimerStart += () => jumpVelocity = jumpForce;
             jumpTimer.OnTimerStop += () => jumpCooldownTimer.Start();
 
-
+            //switchTimer = new CountdownTimer(switchDuration);
+            //switchCooldownTimer = new CountdownTimer(switchCooldown);
 
             //dashTimer = new CountdownTimer(dashDuration);
             //dashCooldownTimer = new CountdownTimer(dashCooldown);
@@ -90,10 +89,10 @@ namespace NBProtoype
             //};
 
             //attackTimer = new CountdownTimer(attackCooldown);
-            switchTimer = new CountdownTimer(switchCooldown);
 
-            timers = new(2) { jumpTimer, jumpCooldownTimer, switchTimer};
-            //dashTimer, dashCooldownTimer, attackTimer 
+
+            timers = new(2) { jumpTimer, jumpCooldownTimer };
+            //dashTimer, dashCooldownTimer, attackTimer switchTimer
         }
 
         void Start() => input.EnablePlayerActions();
@@ -101,7 +100,7 @@ namespace NBProtoype
         void OnEnable()
         {
             input.Jump += OnJump;
-            input.Switch -= OnSwitch;
+            //input.Switch -= OnSwitch;
             //input.Dash += OnDash;
             //input.Attack += OnAttack;
         }
@@ -109,7 +108,7 @@ namespace NBProtoype
         void OnDisable()
         {
             input.Jump -= OnJump;
-            input.Switch -= OnSwitch;
+            //input.Switch -= OnSwitch;
             //input.Dash -= OnDash;
             //input.Attack -= OnAttack;
         }
@@ -126,14 +125,7 @@ namespace NBProtoype
         }
         void OnSwitch(bool performed)
         {
-            if (performed && !jumpTimer.IsRunning && !jumpCooldownTimer.IsRunning && groundChecker.IsGrounded)
-            {
-                switchTimer.Start();
-            }
-            else if (!performed && jumpTimer.IsRunning)
-            {
-                switchTimer.Stop();
-            }
+            // switch
         }
         void Update()
         {
