@@ -6,6 +6,7 @@ namespace NBProtoype
 {
     public class Entity : MonoBehaviour
     {
+        //[SerializeField] IntEventChannel scoreChannel;
 
     }
 }

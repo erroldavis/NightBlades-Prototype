@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Utilities;
 
-namespace NBProtoype
+namespace NBProtoype.SpawnSystem
 {
     public class CollectibleSpawnManager : EntitySpawnManager
     {
