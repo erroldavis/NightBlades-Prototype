@@ -49,6 +49,7 @@ namespace NBProtoype
         //CountdownTimer switchTimer;
         //CountdownTimer switchCooldownTimer;
 
+        StateMachine stateMachine;
 
         // Animator parameters
         static readonly int Speed = Animator.StringToHash("Speed");
@@ -64,7 +65,36 @@ namespace NBProtoype
             rb.freezeRotation = true;
 
             SetupTimers();
-            //SetupStateMachine();
+            SetupStateMachine();
+        }
+
+        void SetupStateMachine()
+        {
+            // State Machine
+            stateMachine = new StateMachine();
+
+            // Declare states
+            var locomotionState = new LocomotionState(this, animator);
+            var jumpState = new JumpState(this, animator);
+            //var dashState = new DashState(this, animator);
+            //var attackState = new AttackState(this, animator);
+
+            // Define transitions
+            At(locomotionState, jumpState, new FuncPredicate(() => jumpTimer.IsRunning));
+            //At(locomotionState, dashState, new FuncPredicate(() => dashTimer.IsRunning));
+            //At(locomotionState, attackState, new FuncPredicate(() => attackTimer.IsRunning));
+           // At(attackState, locomotionState, new FuncPredicate(() => !attackTimer.IsRunning));
+            Any(locomotionState, new FuncPredicate(ReturnToLocomotionState));
+
+            // Set initial state
+            stateMachine.SetState(locomotionState);
+        }
+        bool ReturnToLocomotionState()
+        {
+            return groundChecker.IsGrounded
+                   //&& !attackTimer.IsRunning
+                   && !jumpTimer.IsRunning;
+                   //&& !dashTimer.IsRunning;
         }
 
         void SetupTimers()
@@ -94,6 +124,9 @@ namespace NBProtoype
             timers = new(2) { jumpTimer, jumpCooldownTimer };
             //dashTimer, dashCooldownTimer, attackTimer switchTimer
         }
+
+        void At(IState from, IState to, IPredicate condition) => stateMachine.AddTransition(from, to, condition);
+        void Any(IState to, IPredicate condition) => stateMachine.AddAnyTransition(to, condition);
 
         void Start() => input.EnablePlayerActions();
 
@@ -131,14 +164,13 @@ namespace NBProtoype
         {
             movement = new Vector3(input.Direction.x, 0f, input.Direction.y);
             
-            //stateMachine.Update();
+            stateMachine.Update();
             HandleTimers();
             UpdateAnimator();
         }
         void FixedUpdate()
         {
-            HandleJump();
-            HandleMovement();
+            stateMachine.FixedUpdate();
         }
 
         void UpdateAnimator()
