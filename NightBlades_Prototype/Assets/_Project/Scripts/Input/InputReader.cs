@@ -51,7 +51,10 @@ namespace NBProtoype
 
         void IPlayerActions.OnFire(InputAction.CallbackContext context)
         {
-            //Frie
+            if (context.phase == InputActionPhase.Started)
+            {
+                Attack.Invoke();
+            }
         }
 
         void IPlayerActions.OnMouseControlCamera(InputAction.CallbackContext context)

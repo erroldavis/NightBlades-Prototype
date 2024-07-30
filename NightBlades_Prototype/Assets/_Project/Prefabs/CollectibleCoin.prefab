@@ -118,6 +118,7 @@ GameObject:
   - component: {fileID: 7068849561306063752}
   - component: {fileID: 3559018514393891803}
   - component: {fileID: 230609251974150125}
+  - component: {fileID: 2296057980490699295}
   m_Layer: 0
   m_Name: CollectibleCoin
   m_TagString: Untagged
@@ -133,7 +134,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4143983995762879187}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.6716245, y: -0, z: -0, w: 0.74089175}
+  m_LocalRotation: {x: 0.6716236, y: 0, z: 0, w: 0.7408925}
   m_LocalPosition: {x: 2, y: 0.711, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -154,6 +155,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   score: 10
+  scoreChannel: {fileID: 11400000, guid: a6324e9ee24391346a810f7aec3bba6c, type: 2}
 --- !u!114 &3559018514393891803
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -265,3 +267,24 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!135 &2296057980490699295
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4143983995762879187}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}

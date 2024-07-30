@@ -7,6 +7,12 @@ namespace NBProtoype
         protected readonly Enemy enemy;
         protected readonly Animator animator;
 
+        protected static readonly int IdleHash = Animator.StringToHash("Cactus_IdleNormal");
+        protected static readonly int RunHash = Animator.StringToHash("Cactus_RunFWD");
+        protected static readonly int WalkHash = Animator.StringToHash("Cactus_WalkFWD");
+        protected static readonly int AttackHash = Animator.StringToHash("Cactus_Attack01");
+        protected static readonly int DieHash = Animator.StringToHash("Cactus_Die");
+
         protected const float crossFadeDuration = 0.1f;
         protected EnemyBaseState(Enemy enemy, Animator animator)
         {
@@ -16,22 +22,22 @@ namespace NBProtoype
 
         public virtual void FixedUpdate()
         {
-            throw new System.NotImplementedException();
+            //noop
         }
 
         public virtual void OnEnter()
         {
-            throw new System.NotImplementedException();
+            //noop
         }
 
         public virtual void OnExit()
         {
-            throw new System.NotImplementedException();
+            //noop
         }
 
         public virtual void Update()
         {
-            throw new System.NotImplementedException();
+            //noop
         }
     }
 }

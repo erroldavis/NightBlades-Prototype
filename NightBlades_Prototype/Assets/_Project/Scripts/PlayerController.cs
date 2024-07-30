@@ -10,6 +10,7 @@ namespace NBProtoype
 {
     public class PlayerController : ValidatedMonoBehaviour
     {
+        
         [Header("References")]
         [SerializeField, Self] Rigidbody rb;
         [SerializeField, Self] GroundChecker groundChecker;
@@ -28,6 +29,11 @@ namespace NBProtoype
         [SerializeField] float jumpCooldown = 0f;
         [SerializeField] float gravityMultiplier = 3f;
 
+        [Header("Attack Settings")]
+        [SerializeField] float attackCooldown = 0.5f;
+        [SerializeField] float attackDistance = 1f;
+        [SerializeField] int attackDamage = 10;
+
         //[Header("Personality Switch Settings")]
         //[SerializeField] float switchDuration = 0.5f;
         //[SerializeField] float switchCooldown = 0f;
@@ -45,6 +51,7 @@ namespace NBProtoype
         List<Timer> timers;
         CountdownTimer jumpTimer;
         CountdownTimer jumpCooldownTimer;
+        CountdownTimer attackTimer;
 
         //CountdownTimer switchTimer;
         //CountdownTimer switchCooldownTimer;
@@ -77,13 +84,13 @@ namespace NBProtoype
             var locomotionState = new LocomotionState(this, animator);
             var jumpState = new JumpState(this, animator);
             //var dashState = new DashState(this, animator);
-            //var attackState = new AttackState(this, animator);
+            var attackState = new AttackState(this, animator);
 
             // Define transitions
             At(locomotionState, jumpState, new FuncPredicate(() => jumpTimer.IsRunning));
             //At(locomotionState, dashState, new FuncPredicate(() => dashTimer.IsRunning));
-            //At(locomotionState, attackState, new FuncPredicate(() => attackTimer.IsRunning));
-           // At(attackState, locomotionState, new FuncPredicate(() => !attackTimer.IsRunning));
+            At(locomotionState, attackState, new FuncPredicate(() => attackTimer.IsRunning));
+            At(attackState, locomotionState, new FuncPredicate(() => !attackTimer.IsRunning));
             Any(locomotionState, new FuncPredicate(ReturnToLocomotionState));
 
             // Set initial state
@@ -92,7 +99,7 @@ namespace NBProtoype
         bool ReturnToLocomotionState()
         {
             return groundChecker.IsGrounded
-                   //&& !attackTimer.IsRunning
+                   && !attackTimer.IsRunning
                    && !jumpTimer.IsRunning;
                    //&& !dashTimer.IsRunning;
         }
@@ -118,11 +125,11 @@ namespace NBProtoype
             //dashCooldownTimer.Start();
             //};
 
-            //attackTimer = new CountdownTimer(attackCooldown);
+            attackTimer = new CountdownTimer(attackCooldown);
 
 
-            timers = new(2) { jumpTimer, jumpCooldownTimer };
-            //dashTimer, dashCooldownTimer, attackTimer switchTimer
+            timers = new(2) { jumpTimer, jumpCooldownTimer, attackTimer };
+            //dashTimer, dashCooldownTimer, switchTimer
         }
 
         void At(IState from, IState to, IPredicate condition) => stateMachine.AddTransition(from, to, condition);
@@ -135,7 +142,7 @@ namespace NBProtoype
             input.Jump += OnJump;
             //input.Switch -= OnSwitch;
             //input.Dash += OnDash;
-            //input.Attack += OnAttack;
+            input.Attack += OnAttack;
         }
 
         void OnDisable()
@@ -143,8 +150,32 @@ namespace NBProtoype
             input.Jump -= OnJump;
             //input.Switch -= OnSwitch;
             //input.Dash -= OnDash;
-            //input.Attack -= OnAttack;
+            input.Attack -= OnAttack;
         }
+
+        void OnAttack()
+        {
+            if (!attackTimer.IsRunning)
+            {
+                attackTimer.Start();
+            }
+        }
+
+        public void Attack()
+        {
+            Vector3 attackPos = transform.position + transform.forward;
+            Collider[] hitEnemies = Physics.OverlapSphere(attackPos, attackDistance);
+
+            foreach (var enemy in hitEnemies)
+            {
+                Debug.Log(enemy.name);
+                if (enemy.CompareTag("Enemy"))
+                {
+                    enemy.GetComponent<Health>().TakeDamage(attackDamage);
+                }
+            }
+        }
+
         void OnJump(bool performed)
         {
             if (performed && !jumpTimer.IsRunning && !jumpCooldownTimer.IsRunning && groundChecker.IsGrounded)
